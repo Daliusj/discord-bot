@@ -1,5 +1,6 @@
-import { type Insertable, type Selectable, type Updateable } from 'kysely'
+import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { Database, Sprints } from '@/database'
+import { keys } from './schema'
 
 const TABLE = 'sprints'
 type Row = Sprints
@@ -9,33 +10,42 @@ type RowUpdate = Updateable<RowWithoutId>
 type RowSelect = Selectable<Row>
 
 export default (db: Database) => ({
-  insertNew: async (record: RowInsert): Promise<RowInsert | undefined> => {
-    if (record.sprintsCode && record.title) {
-      return db
-        .insertInto(TABLE)
-        .values(record)
-        .returningAll()
-        .executeTakeFirst()
-    }
-    return undefined
+  createNew(record: RowInsert): Promise<RowInsert | undefined> {
+    return db
+      .insertInto(TABLE)
+      .values(record)
+      .returning(keys)
+      .executeTakeFirst()
   },
 
-  findAll: async (): Promise<RowSelect[]> =>
-    db.selectFrom(TABLE).selectAll().execute(),
+  findAll(): Promise<RowSelect[]> {
+    return db.selectFrom(TABLE).select(keys).execute()
+  },
 
-  findById: async (id: number): Promise<RowSelect[]> =>
-    db.selectFrom(TABLE).selectAll().where('id', '=', id).execute(),
+  findById(id: number): Promise<RowSelect | undefined> {
+    return db
+      .selectFrom(TABLE)
+      .select(keys)
+      .where('id', '=', id)
+      .executeTakeFirst()
+  },
 
-  update: async (
-    id: number,
-    partial: RowUpdate
-  ): Promise<RowUpdate | undefined> =>
-    db
+  update(id: number, partial: RowUpdate): Promise<RowUpdate | undefined> {
+    if (Object.keys(partial).length === 0) {
+      return this.findById(id)
+    }
+    return db
       .updateTable(TABLE)
       .set(partial)
       .where('id', '=', id)
-      .returningAll()
-      .executeTakeFirst(),
-  delete: async (id: number) =>
-    db.deleteFrom(TABLE).where('id', '=', id).returningAll().executeTakeFirst(),
+      .returning(keys)
+      .executeTakeFirst()
+  },
+  delete(id: number) {
+    return db
+      .deleteFrom(TABLE)
+      .where('id', '=', id)
+      .returning(keys)
+      .executeTakeFirst()
+  },
 })

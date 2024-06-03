@@ -1,8 +1,10 @@
 import { Router } from 'express'
+import { StatusCodes } from 'http-status-codes'
 import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
-// import * as schema from './schema'
+import { SprintNotFound } from './errors'
+import * as schema from './schema'
 
 export default (db: Database) => {
   const repository = buildRespository(db)
@@ -11,43 +13,50 @@ export default (db: Database) => {
   router
     .post(
       '/',
-      jsonRoute(async (req, res) => {
-        // const body = schema.parseInsertables(req.body)
-        const record = await repository.insertNew(req.body)
-        res.status(200)
-        res.json(record)
-      })
+      jsonRoute(async (req) => {
+        const body = schema.parseInsertables(req.body)
+        return repository.createNew(body)
+      }, StatusCodes.CREATED)
     )
     .get(
       '/',
-      jsonRoute(async (req, res) => {
+      jsonRoute(async () => {
         const records = await repository.findAll()
-        res.status(200)
-        res.json(records)
+        return records
       })
     )
     .patch(
       '/:id',
-      jsonRoute(async (req, res) => {
-        const record = await repository.update(Number(req.params.id), req.body)
-        res.status(200)
-        res.json(record)
+      jsonRoute(async (req) => {
+        const id = schema.parseId(req.params.id)
+        const bodyPatch = schema.parseUpdatables(req.body)
+        const record = await repository.update(id, bodyPatch)
+        if (!record) {
+          throw new SprintNotFound()
+        }
+        return record
       })
     )
     .get(
       '/:id',
-      jsonRoute(async (req, res) => {
-        const record = await repository.findById(Number(req.params.id))
-        res.status(200)
-        res.json(record)
+      jsonRoute(async (req) => {
+        const id = schema.parseId(req.params.id)
+        const record = await repository.findById(id)
+        if (!record) {
+          throw new SprintNotFound()
+        }
+        return record
       })
     )
     .delete(
       '/:id',
-      jsonRoute(async (req, res) => {
-        const record = await repository.delete(Number(req.params.id))
-        res.status(200)
-        res.json(record)
+      jsonRoute(async (req) => {
+        const id = schema.parseId(req.params.id)
+        const record = await repository.delete(id)
+        if (!record) {
+          throw new SprintNotFound()
+        }
+        return record
       })
     )
 
