@@ -75,13 +75,12 @@ describe('Update', () => {
     const record = await repository.update(sprint.id, { title: 'updated' })
     expect(record).toMatchObject(sprintMatcher({ title: 'updated' }))
   })
-  it('should return the original article if no changes are made', async () => {
+  it('should return the original sprint if no changes are made', async () => {
     const [sprint] = await createForSprints(fakeSprint())
     const record = await repository.update(sprint.id, {})
     expect(record).toMatchObject(sprintMatcher())
   })
   it('should return undefined if record is not found', async () => {
-    // ACT (When we call...)
     const sprint = await repository.update(999, fakeSprint())
     expect(sprint).toBeUndefined()
   })

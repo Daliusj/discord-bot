@@ -17,14 +17,14 @@ afterEach(async () => {
 afterAll(() => db.destroy())
 
 describe('POST', () => {
-  it('should return 201 and created article record', async () => {
+  it('should return 201 and created sprint record', async () => {
     const { body } = await supertest(app)
       .post('/sprints')
       .send(fakeSprint({}))
       .expect(201)
     expect(body).toEqual(sprintMatcher())
   })
-  it('does not allow to create an article with empty sprints code', async () => {
+  it('does not allow to create a sprint with empty sprints code', async () => {
     const { body } = await supertest(app)
       .post('/sprints')
       .send(
@@ -36,7 +36,7 @@ describe('POST', () => {
       .expect(400)
     expect(body.error.message).toMatch(/sprintsCode/i)
   })
-  it('does not allow to create an article with an empty title', async () => {
+  it('does not allow to create a sprint with an empty title', async () => {
     const { body } = await supertest(app)
       .post('/sprints')
       .send(
@@ -65,7 +65,7 @@ describe('POST', () => {
 })
 
 describe('GET', () => {
-  it('should return a list of existing articles', async () => {
+  it('should return a list of existing sprints', async () => {
     await createForSprints([
       fakeSprint(),
       fakeSprint({
@@ -82,7 +82,7 @@ describe('GET', () => {
       }),
     ])
   })
-  it('should return an empty array when there ar no articles', async () => {
+  it('should return an empty array when there ar no sprints', async () => {
     const { body } = await supertest(app).get('/sprints').expect(200)
     expect(body).toEqual([])
   })
@@ -95,7 +95,7 @@ describe('GET /:id', () => {
     const { body } = await supertest(app).get(`/sprints/${id}`).expect(200)
     expect(body).toEqual(sprintMatcher({ id }))
   })
-  it('should return 404 if article does not exists', async () => {
+  it('should return 404 if sprint does not exists', async () => {
     const { body } = await supertest(app).get('/sprints/999').expect(404)
     expect(body.error.message).toMatch(/not found/i)
   })

@@ -1,12 +1,11 @@
 import { z } from 'zod'
-import type { Sprints } from '@/database'
+import type { Templates } from '@/database'
 
-type Record = Sprints
+type Record = Templates
 
 const schema = z.object({
   id: z.coerce.number().int().positive(),
-  sprintsCode: z.string().min(1).max(50),
-  title: z.string().min(1).max(500),
+  text: z.string().min(1).max(500),
 })
 
 const insertable = schema.omit({
