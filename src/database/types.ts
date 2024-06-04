@@ -10,6 +10,7 @@ export interface Gifs {
 }
 
 export interface Messages {
+  gifId: number;
   id: Generated<number>;
   sprintId: number;
   templateId: number;
