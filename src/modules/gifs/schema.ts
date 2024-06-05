@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import type { Templates } from '@/database'
+import type { Gifs } from '@/database'
 
-type Record = Templates
+type Record = Gifs
 
 const schema = z.object({
   id: z.coerce.number().int().positive(),
-  text: z.string().min(1).max(500),
+  url: z.string().url().min(5).max(100),
 })
 
 const insertable = schema.omit({

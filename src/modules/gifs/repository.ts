@@ -1,9 +1,9 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { Database, Templates } from '@/database'
+import type { Database, Gifs } from '@/database'
 import { keys } from './schema'
 
-const TABLE = 'templates'
-type Row = Templates
+const TABLE = 'gifs'
+type Row = Gifs
 type RowWithoutId = Omit<Row, 'id'>
 type RowInsert = Insertable<RowWithoutId>
 type RowUpdate = Updateable<RowWithoutId>

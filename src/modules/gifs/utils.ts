@@ -1,25 +1,21 @@
 import { expect } from 'vitest'
 import type { Insertable } from 'kysely'
-import type { Templates } from '@/database'
+import type { Gifs } from '@/database'
 
-export const fakeTemplate = (
-  overrides: Partial<Insertable<Templates>> = {}
-): Insertable<Templates> => ({
-  text: 'You did it!',
+export const fakeGif = (
+  overrides: Partial<Insertable<Gifs>> = {}
+): Insertable<Gifs> => ({
+  url: 'https://testurl.test.com/gif',
   ...overrides,
 })
 
-export const templateMatcher = (
-  overrides: Partial<Insertable<Templates>> = {}
-) => ({
+export const gifMatcher = (overrides: Partial<Insertable<Gifs>> = {}) => ({
   id: expect.any(Number),
   ...overrides,
-  ...fakeTemplate(overrides),
+  ...fakeGif(overrides),
 })
 
-export const fakeTemplateFull = (
-  overrides: Partial<Insertable<Templates>> = {}
-) => ({
+export const fakeGifFull = (overrides: Partial<Insertable<Gifs>> = {}) => ({
   id: 1,
-  ...fakeTemplate(overrides),
+  ...fakeGif(overrides),
 })

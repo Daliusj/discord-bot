@@ -107,8 +107,8 @@ describe('Update', () => {
   })
 
   it('should return undefined if record is not found', async () => {
-    const template = await repository.update(999, fakeUser())
-    expect(template).toBeUndefined()
+    const record = await repository.update(999, fakeUser())
+    expect(record).toBeUndefined()
   })
 })
 

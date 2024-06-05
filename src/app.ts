@@ -4,6 +4,7 @@ import { type Database } from './database'
 import sprints from '@/modules/sprints/controller'
 import templates from '@/modules/templates/controller'
 import users from '@/modules/users/controller'
+import gifs from '@/modules/gifs/controller'
 
 export default function createApp(db: Database) {
   const app = express()
@@ -13,6 +14,7 @@ export default function createApp(db: Database) {
   app.use('/sprints', sprints(db))
   app.use('/templates', templates(db))
   app.use('/users', users())
+  app.use('/gifs', gifs())
 
   app.use(jsonErrorHandler)
 
