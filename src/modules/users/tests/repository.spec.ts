@@ -1,12 +1,14 @@
 import createTestDatabase from '@tests/utils/createTestDatabase'
 import { selectAllFor, createFor } from '@tests/utils/records'
 import buildRepository from '../repository'
-import { fakeUser, userMatcher, expresionBuilderFindByName } from '../utils'
+import { fakeUser, userMatcher } from './utils'
+import { searchExpressionFactory } from '../utils'
 
 const db = await createTestDatabase()
 const repository = buildRepository(db)
 const selectAllRecords = selectAllFor(db, 'users')
 const createForUsers = createFor(db, 'users')
+const searchExpression = searchExpressionFactory()
 
 afterAll(() => db.destroy())
 
@@ -27,14 +29,14 @@ describe('Create', () => {
 describe('Find', () => {
   it('should return a user by specified name', async () => {
     await createForUsers(fakeUser({ name: 'John Tester' }))
-    const expression = expresionBuilderFindByName('john')
+    const expression = searchExpression.findByName('john')
     const record = await repository.find(expression)
     expect(record).toEqual([userMatcher({ name: 'John Tester' })])
   })
 
   it('should return an empty array if no users are found', async () => {
     await createForUsers(fakeUser({ name: 'John Tester' }))
-    const expression = expresionBuilderFindByName('peter')
+    const expression = searchExpression.findByName('peter')
     const record = await repository.find(expression)
     expect(record).toEqual([])
   })
@@ -42,7 +44,7 @@ describe('Find', () => {
   it('should return all matching records for partial matches', async () => {
     await createForUsers(fakeUser({ name: 'John Tester' }))
     await createForUsers(fakeUser({ name: 'Johnson' }))
-    const expression = expresionBuilderFindByName('john')
+    const expression = searchExpression.findByName('john')
     const records = await repository.find(expression)
     expect(records).toEqual([
       userMatcher({ name: 'John Tester' }),

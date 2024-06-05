@@ -1,7 +1,7 @@
 import createTestDatabase from '@tests/utils/createTestDatabase'
 import { selectAllFor, createFor } from '@tests/utils/records'
 import buildRepository from '../repository'
-import { fakeGif, gifMatcher } from '../utils'
+import { fakeGif, gifMatcher } from './utils'
 
 const db = await createTestDatabase()
 const repository = buildRepository(db)

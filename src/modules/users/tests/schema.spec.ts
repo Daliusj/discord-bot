@@ -1,6 +1,6 @@
 import { Users } from '@/database'
 import { parse, parseInsertable, parseUpdatable } from '../schema'
-import { fakeUserFull } from '../utils'
+import { fakeUserFull } from './utils'
 
 it('parses a valid record', () => {
   const record = fakeUserFull() as unknown as Users

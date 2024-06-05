@@ -1,6 +1,6 @@
 import { Gifs } from '@/database'
 import { parse, parseInsertable, parseUpdatable } from '../schema'
-import { fakeGifFull } from '../utils'
+import { fakeGifFull } from './utils'
 
 it('parses a valid record', () => {
   const record = fakeGifFull() as unknown as Gifs
