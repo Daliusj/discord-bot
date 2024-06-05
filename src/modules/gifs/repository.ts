@@ -1,12 +1,12 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { Database, Messages } from '@/database'
+import type { Database, Templates } from '@/database'
 import { keys } from './schema'
 
-const TABLE = 'messages'
-type Row = Messages
-type RowWithoutIdandTimeStamp = Omit<Row, 'id' | 'timeStamp'>
-type RowInsert = Insertable<RowWithoutIdandTimeStamp>
-type RowUpdate = Updateable<RowWithoutIdandTimeStamp>
+const TABLE = 'templates'
+type Row = Templates
+type RowWithoutId = Omit<Row, 'id'>
+type RowInsert = Insertable<RowWithoutId>
+type RowUpdate = Updateable<RowWithoutId>
 type RowSelect = Selectable<Row>
 
 export default (db: Database) => ({

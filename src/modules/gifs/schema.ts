@@ -1,23 +1,15 @@
 import { z } from 'zod'
-import type { Messages } from '@/database'
+import type { Templates } from '@/database'
 
-type Record = Messages
+type Record = Templates
 
 const schema = z.object({
   id: z.coerce.number().int().positive(),
-  userId: z.number().min(1).max(500),
-  sprintId: z.number().min(1).max(500),
-  templateId: z.number().min(1).max(500),
-  gifId: z.number().min(1).max(500),
-  timeStamp: z
-    .string()
-    .min(5)
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'Invalid timestamp format'),
+  text: z.string().min(1).max(500),
 })
 
 const insertable = schema.omit({
   id: true,
-  timeStamp: true,
 })
 const updateable = insertable.partial()
 

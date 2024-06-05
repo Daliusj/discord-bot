@@ -1,12 +1,19 @@
-import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { Database, Messages } from '@/database'
+import type {
+  Insertable,
+  Selectable,
+  Updateable,
+  ExpressionOrFactory,
+  SqlBool,
+} from 'kysely'
+import type { Database, Users, DB } from '@/database'
 import { keys } from './schema'
 
-const TABLE = 'messages'
-type Row = Messages
-type RowWithoutIdandTimeStamp = Omit<Row, 'id' | 'timeStamp'>
-type RowInsert = Insertable<RowWithoutIdandTimeStamp>
-type RowUpdate = Updateable<RowWithoutIdandTimeStamp>
+const TABLE = 'users'
+type Row = Users
+type TableName = typeof TABLE
+type RowWithoutId = Omit<Row, 'id'>
+type RowInsert = Insertable<RowWithoutId>
+type RowUpdate = Updateable<RowWithoutId>
 type RowSelect = Selectable<Row>
 
 export default (db: Database) => ({
@@ -16,6 +23,12 @@ export default (db: Database) => ({
       .values(record)
       .returning(keys)
       .executeTakeFirst()
+  },
+
+  find(
+    expression: ExpressionOrFactory<DB, TableName, SqlBool>
+  ): Promise<RowSelect[]> {
+    return db.selectFrom(TABLE).select(keys).where(expression).execute()
   },
 
   findAll(): Promise<RowSelect[]> {
