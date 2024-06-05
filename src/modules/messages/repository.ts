@@ -1,9 +1,16 @@
-import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { Database, Messages } from '@/database'
+import type {
+  ExpressionOrFactory,
+  Insertable,
+  Selectable,
+  SqlBool,
+  Updateable,
+} from 'kysely'
+import type { DB, Database, Messages } from '@/database'
 import { keys } from './schema'
 
 const TABLE = 'messages'
 type Row = Messages
+type TableName = typeof TABLE
 type RowWithoutIdandTimeStamp = Omit<Row, 'id' | 'timeStamp'>
 type RowInsert = Insertable<RowWithoutIdandTimeStamp>
 type RowUpdate = Updateable<RowWithoutIdandTimeStamp>
@@ -20,6 +27,12 @@ export default (db: Database) => ({
 
   findAll(): Promise<RowSelect[]> {
     return db.selectFrom(TABLE).select(keys).execute()
+  },
+
+  find(
+    expression: ExpressionOrFactory<DB, TableName, SqlBool>
+  ): Promise<RowSelect[]> {
+    return db.selectFrom(TABLE).select(keys).where(expression).execute()
   },
 
   findById(id: number): Promise<RowSelect | undefined> {
