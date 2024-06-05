@@ -1,7 +1,11 @@
 import createTestDatabase from '@tests/utils/createTestDatabase'
 import { selectAllFor, createFor } from '@tests/utils/records'
 import buildRepository from '../repository'
-import { fakeSprint, sprintMatcher } from './utils'
+import {
+  fakeSprint,
+  sprintMatcher,
+  expresionBuilderFindBySprintCode,
+} from './utils'
 
 const db = await createTestDatabase()
 const repository = buildRepository(db)
@@ -21,6 +25,33 @@ describe('Create', () => {
     const allRecords = await selectAllRecords()
     expect(allRecords).toHaveLength(1)
     expect(allRecords).toEqual([sprintMatcher()])
+  })
+})
+
+describe('Find', () => {
+  it('should return a sprint by specified name', async () => {
+    await createForSprints(fakeSprint({ sprintsCode: 'WD-1.1' }))
+    const expression = expresionBuilderFindBySprintCode('WD-1.1')
+    const record = await repository.find(expression)
+    expect(record).toEqual([sprintMatcher({ sprintsCode: 'WD-1.1' })])
+  })
+
+  it('should return an empty array if no sprints are found', async () => {
+    await createForSprints(fakeSprint({ sprintsCode: 'WD-1.1' }))
+    const expression = expresionBuilderFindBySprintCode('WD-1.2')
+    const record = await repository.find(expression)
+    expect(record).toEqual([])
+  })
+
+  it('should return all matching records for partial matches', async () => {
+    await createForSprints(fakeSprint({ sprintsCode: 'WD-1.1' }))
+    await createForSprints(fakeSprint({ sprintsCode: 'WD-1.2' }))
+    const expression = expresionBuilderFindBySprintCode('WD-1')
+    const records = await repository.find(expression)
+    expect(records).toEqual([
+      sprintMatcher({ sprintsCode: 'WD-1.1' }),
+      sprintMatcher({ sprintsCode: 'WD-1.2' }),
+    ])
   })
 })
 

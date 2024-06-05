@@ -1,9 +1,16 @@
-import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { Database, Sprints } from '@/database'
+import type {
+  Insertable,
+  Selectable,
+  Updateable,
+  ExpressionOrFactory,
+  SqlBool,
+} from 'kysely'
+import type { Database, Sprints, DB } from '@/database'
 import { keys } from './schema'
 
 const TABLE = 'sprints'
 type Row = Sprints
+type TableName = typeof TABLE
 type RowWithoutId = Omit<Row, 'id'>
 type RowInsert = Insertable<RowWithoutId>
 type RowUpdate = Updateable<RowWithoutId>
@@ -16,6 +23,12 @@ export default (db: Database) => ({
       .values(record)
       .returning(keys)
       .executeTakeFirst()
+  },
+
+  find(
+    expression: ExpressionOrFactory<DB, TableName, SqlBool>
+  ): Promise<RowSelect[]> {
+    return db.selectFrom(TABLE).select(keys).where(expression).execute()
   },
 
   findAll(): Promise<RowSelect[]> {
