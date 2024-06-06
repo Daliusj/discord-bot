@@ -4,7 +4,7 @@ import buildRepository from '../repository'
 import { fakeSprint } from '@/modules/sprints/tests/utils'
 import { fakeTemplate } from '@/modules/templates/tests/utils'
 import { fakeUser } from '@/modules/users/tests/utils'
-import { fakeGif } from '@/modules/gifs/utils'
+import { fakeGif } from '@/modules/gifs/tests/utils'
 import { fakeMessage, messageMatcher } from './utils'
 import { searchExpressionFactory } from '../utils'
 
