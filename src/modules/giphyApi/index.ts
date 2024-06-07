@@ -6,15 +6,14 @@ if (!API_KEY) {
   throw new Error('GIPHY_API_KEY is not defined in the environment variables.')
 }
 
-export default async () => {
+export default async (phrase: string) => {
   try {
     const gf = new GiphyFetch(API_KEY)
-    const randomNumber = Math.floor(Math.random() * 10000)
-    const { data: gif } = await gf.search('success', {
+    const { data: gif } = await gf.search(phrase, {
       sort: 'relevant',
       lang: 'es',
       limit: 1,
-      offset: randomNumber,
+      offset: Math.floor(Math.random() * 10000),
       type: 'gifs',
     })
     return gif
