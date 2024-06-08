@@ -3,5 +3,7 @@ import { DB } from '@/database'
 
 export const searchExpressionFactory = () => ({
   findByName: (name: string) => (eb: ExpressionBuilder<DB, 'users'>) =>
+    eb('name', '=', `${name}`),
+  findByPartialName: (name: string) => (eb: ExpressionBuilder<DB, 'users'>) =>
     eb('name', 'like', `%${name}%`),
 })

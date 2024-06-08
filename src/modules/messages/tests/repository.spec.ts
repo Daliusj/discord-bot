@@ -18,8 +18,6 @@ const createForTemplates = createFor(db, 'templates')
 const createForGifs = createFor(db, 'gifs')
 const searchExpressions = searchExpressionFactory()
 
-afterAll(() => db.destroy())
-
 afterEach(async () => {
   await db.deleteFrom('messages').execute()
   await db.deleteFrom('users').execute()
@@ -27,6 +25,8 @@ afterEach(async () => {
   await db.deleteFrom('gifs').execute()
   await db.deleteFrom('templates').execute()
 })
+
+afterAll(() => db.destroy())
 
 describe('Create', () => {
   it('should create a message record if Users, Sprints, Templates and Gifs records exists', async () => {

@@ -29,7 +29,7 @@ describe('Create', () => {
 describe('Find', () => {
   it('should return a user by specified name', async () => {
     await createForUsers(fakeUser({ name: 'John Tester' }))
-    const expression = searchExpression.findByName('john')
+    const expression = searchExpression.findByName('John Tester')
     const record = await repository.find(expression)
     expect(record).toEqual([userMatcher({ name: 'John Tester' })])
   })
@@ -44,7 +44,7 @@ describe('Find', () => {
   it('should return all matching records for partial matches', async () => {
     await createForUsers(fakeUser({ name: 'John Tester' }))
     await createForUsers(fakeUser({ name: 'Johnson' }))
-    const expression = searchExpression.findByName('john')
+    const expression = searchExpression.findByPartialName('john')
     const records = await repository.find(expression)
     expect(records).toEqual([
       userMatcher({ name: 'John Tester' }),

@@ -17,7 +17,7 @@ type RowUpdate = Updateable<RowWithoutId>
 type RowSelect = Selectable<Row>
 
 export default (db: Database) => ({
-  createNew(record: RowInsert): Promise<RowInsert | undefined> {
+  createNew(record: RowInsert): Promise<RowSelect | undefined> {
     return db
       .insertInto(TABLE)
       .values(record)

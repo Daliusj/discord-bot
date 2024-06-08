@@ -44,7 +44,7 @@ describe('Find', () => {
   it('should return all matching records for partial matches', async () => {
     await createForSprints(fakeSprint({ sprintsCode: 'WD-1.1' }))
     await createForSprints(fakeSprint({ sprintsCode: 'WD-1.2' }))
-    const expression = searchExpressions.findBySprintCode('WD-1')
+    const expression = searchExpressions.findByPartialSprintCode('WD-1')
     const records = await repository.find(expression)
     expect(records).toEqual([
       sprintMatcher({ sprintsCode: 'WD-1.1' }),
