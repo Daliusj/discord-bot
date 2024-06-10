@@ -3,18 +3,19 @@ import { createFor } from '@tests/utils/records'
 import { fakeSprint } from '@/modules/sprints/tests/utils'
 import { fakeTemplate } from '@/modules/templates/tests/utils'
 import { fakeUser } from '@/modules/users/tests/utils'
-import initializeServices from '../services'
+import buildServices from '../services'
 import {
   fakeMessage,
-  initializeMockGiphy,
-  initializedMockDiscord,
+  buildMockGiphy,
+  buildMockDiscord,
+  postResponseBodyMatcher,
 } from './utils'
 import { fakeGif } from '@/modules/gifs/tests/utils'
 
 const db = await createTestDatabase()
-const discord = await initializedMockDiscord()
-const giphy = await initializeMockGiphy()
-const services = await initializeServices(db, discord, giphy)
+const discord = await buildMockDiscord()
+const giphy = await buildMockGiphy()
+const services = buildServices(db, discord, giphy)
 const createForUsers = createFor(db, 'users')
 const createForSprints = createFor(db, 'sprints')
 const createForTemplates = createFor(db, 'templates')
@@ -41,13 +42,15 @@ describe('createMessage', () => {
       fakeTemplate({ text: 'Test text' })
     )
     const message = await services.createMessage(user.name, sprint.sprintsCode)
-    expect(message).toEqual({
-      name: user.name,
-      sprintsCode: sprint.sprintsCode,
-      title: sprint.title,
-      text: template.text,
-      url: await giphy.getGifUrl(),
-    })
+    expect(message).toEqual(
+      postResponseBodyMatcher({
+        name: user.name,
+        sprintsCode: sprint.sprintsCode,
+        title: sprint.title,
+        text: template.text,
+        url: await giphy.getGifUrl(),
+      })
+    )
   })
 
   it('should throw an error with invalid sprint code', async () => {
@@ -95,22 +98,22 @@ describe('getAllMessages', () => {
     ])
     const messages = await services.getAllMessages()
     expect(messages).toEqual([
-      {
+      postResponseBodyMatcher({
         url: gif1.url,
         sprintsCode: sprint1.sprintsCode,
         title: sprint1.title,
         text: template1.text,
         name: user1.name,
         timeStamp: message1.timeStamp,
-      },
-      {
+      }),
+      postResponseBodyMatcher({
         url: gif2.url,
         sprintsCode: sprint2.sprintsCode,
         title: sprint2.title,
         text: template2.text,
         name: user2.name,
         timeStamp: message2.timeStamp,
-      },
+      }),
     ])
   })
 })
@@ -150,14 +153,14 @@ describe('getAllMessagesByUserName', () => {
     ])
     const messages = await services.getAllMessagesByUserName('Tester')
     expect(messages).toEqual([
-      {
+      postResponseBodyMatcher({
         url: gif1.url,
         sprintsCode: sprint1.sprintsCode,
         title: sprint1.title,
         text: template1.text,
         name: user1.name,
         timeStamp: message1.timeStamp,
-      },
+      }),
     ])
   })
 })
@@ -197,14 +200,14 @@ describe('getAllMessagesBySprintCode', () => {
     ])
     const messages = await services.getAllMessagesBySprintCode('WD-1.1')
     expect(messages).toEqual([
-      {
+      postResponseBodyMatcher({
         url: gif1.url,
         sprintsCode: sprint1.sprintsCode,
         title: sprint1.title,
         text: template1.text,
         name: user1.name,
         timeStamp: message1.timeStamp,
-      },
+      }),
     ])
   })
 })

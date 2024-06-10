@@ -4,9 +4,15 @@ import { createFor } from '@tests/utils/records'
 import { omit } from 'lodash/fp'
 import createApp from '@/app'
 import { fakeSprint, sprintMatcher } from './utils'
+import {
+  buildMockGiphy,
+  buildMockDiscord,
+} from '@/modules/messages/tests/utils'
 
 const db = await createTestDatabase()
-const app = createApp(db)
+const giphy = await buildMockGiphy()
+const discord = await buildMockDiscord()
+const app = createApp(db, discord, giphy)
 
 const createForSprints = createFor(db, 'sprints')
 
@@ -17,7 +23,7 @@ afterEach(async () => {
 afterAll(() => db.destroy())
 
 describe('POST', () => {
-  it('should return 201 and created sprint record', async () => {
+  it('should return 201 and create sprint record', async () => {
     const { body } = await supertest(app)
       .post('/sprints')
       .send(fakeSprint({}))

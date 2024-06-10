@@ -12,7 +12,7 @@ import NotFound from '@/utils/errors/NotFound'
 import ExternalApiError from '@/utils/errors/ExternalApiError'
 import joinedRepositories from '@/joinedRepositories'
 
-export default async (db: Database, discord: Discord, giphy: Giphy) => {
+export default (db: Database, discord: Discord, giphy: Giphy) => {
   const messages = messagesRepository(db)
   const sprints = sprintsRepository(db)
   const templates = templatesRepository(db)
@@ -47,7 +47,13 @@ export default async (db: Database, discord: Discord, giphy: Giphy) => {
       templateId: number,
       userId: number,
       url: string
-    ) => {
+    ): Promise<{
+      gifId: number
+      sprintId: number
+      templateId: number
+      userId: number
+      timeStamp: string
+    }> => {
       const gifRecord = await gifs.createNew({ url })
       if (!gifRecord) {
         throw new Error('Failed to create Gif record')
@@ -75,9 +81,14 @@ export default async (db: Database, discord: Discord, giphy: Giphy) => {
       }
     }
 
-    const sendDiscordMessage = async (text: string, gifUrl: string) => {
+    const sendDiscordMessage = async (
+      template: string,
+      userName: string,
+      title: string,
+      gifUrl: string
+    ) => {
       try {
-        await discord.sendMessage(text, gifUrl)
+        await discord.sendMessage(template, userName, title, gifUrl)
       } catch (err) {
         throw new ExternalApiError(
           `Error sending Discrod message , ${err instanceof Error ? err.message : 'Unknown error'}`
@@ -90,8 +101,9 @@ export default async (db: Database, discord: Discord, giphy: Giphy) => {
       const user = await getUser()
       const sprint = await getSprint()
       const template = await getRandomTemplate()
-      await createDbRecord(sprint.id, template.id, user.id, url)
-      await sendDiscordMessage(template.text, url)
+      const record = await createDbRecord(sprint.id, template.id, user.id, url)
+      console.log(record)
+      await sendDiscordMessage(template.text, user.name, sprint.title, url)
 
       return {
         name: user.name,
@@ -99,8 +111,10 @@ export default async (db: Database, discord: Discord, giphy: Giphy) => {
         title: sprint.title,
         text: template.text,
         url,
+        timeStamp: record.timeStamp,
       }
     } catch (err) {
+      console.log(err)
       throw new Error(
         `Error creating message: ${err instanceof Error ? err.message : 'Unknown error'}`
       )

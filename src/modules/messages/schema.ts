@@ -1,8 +1,10 @@
 import { z } from 'zod'
-import type { Messages } from '@/database'
+import type { Messages, Users, Sprints } from '@/database'
 
 type Record = Messages
 type Partial = Omit<Messages, 'id'>
+type MergedUsersAndSprints = Users & Sprints
+export type PostBody = Omit<MergedUsersAndSprints, 'id' | 'title'>
 
 const schema = z.object({
   id: z.coerce.number().int().positive(),

@@ -18,7 +18,7 @@ type JoinedRowWithoutIds = Omit<
   JoinedRow,
   'id' | 'userId' | 'gifId' | 'sprintId' | 'templateId'
 >
-type RowSelect = Selectable<JoinedRowWithoutIds>
+export type RowSelect = Selectable<JoinedRowWithoutIds>
 
 const mergedKeys = Array.from(
   new Set([

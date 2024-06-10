@@ -13,11 +13,14 @@ const schema = z.object({
 const insertable = schema.omit({
   id: true,
 })
+
 const updateable = insertable.partial()
 const selectable = insertable.partial()
 
 export const parse = (record: Record) => schema.parse(record)
 export const parseId = (id: unknown) => schema.shape.id.parse(id)
+export const parseSprintsCode = (sprintsCode: unknown) =>
+  schema.shape.sprintsCode.parse(sprintsCode)
 export const parseInsertable = (record: unknown) => insertable.parse(record)
 export const parseUpdatable = (record: unknown) => updateable.parse(record)
 

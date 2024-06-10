@@ -1,6 +1,11 @@
-import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
 
-type SendMessage = (text: string, gifUrl: string) => Promise<void>
+type SendMessage = (
+  template: string,
+  userName: string,
+  title: string,
+  gifUrl: string
+) => Promise<void>
 
 export type Discord = {
   sendMessage: SendMessage
@@ -27,13 +32,21 @@ export default async (): Promise<Discord> => {
     ],
   })
 
-  const sendMessage: SendMessage = async (text, gifUrl) => {
+  const sendMessage: SendMessage = async (
+    template,
+    userName,
+    title,
+    gifUrl
+  ) => {
+    const getMessage = () =>
+      `${userName} has just completed ${title}!\n${template} \n${gifUrl}`
+
     try {
       const channel = await client.channels.fetch(CHANNEL_ID)
       if (channel?.isTextBased()) {
-        const embed = new EmbedBuilder().setDescription(text).setImage(gifUrl)
-
-        await channel.send({ embeds: [embed] })
+        await channel.send({
+          content: getMessage(),
+        })
         console.log('Message sent successfully!')
       } else {
         throw new Error('The specified discord channel is not a text channel.')
