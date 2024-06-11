@@ -5,7 +5,7 @@ export async function up(db: Kysely<SqliteDatabase>) {
     .createTable('gifs')
     .ifNotExists()
     .addColumn('id', 'integer', (c) => c.primaryKey().autoIncrement().notNull())
-    .addColumn('url', 'text', (c) => c.notNull().unique())
+    .addColumn('url', 'text', (c) => c.notNull())
     .execute()
 }
 export async function down(db: Kysely<SqliteDatabase>) {
