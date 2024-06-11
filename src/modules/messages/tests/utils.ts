@@ -34,7 +34,7 @@ export const fakeMessageFull = (
 })
 
 export const fakeMessagePostBody = (overrides: Partial<PostBody> = {}) => ({
-  name: 'Tester',
+  name: 'tester',
   sprintsCode: 'WD-1.1',
   ...overrides,
 })
@@ -42,7 +42,7 @@ export const fakeMessagePostBody = (overrides: Partial<PostBody> = {}) => ({
 export const postResponseBodyMatcher = (
   overrides: Partial<MessagePostResponseBody> = {}
 ) => ({
-  name: 'Tester',
+  name: 'tester',
   sprintsCode: 'WD-1.1',
   timeStamp: expect.any(String),
   title: expect.any(String),

@@ -17,7 +17,10 @@ const selectable = insertable.partial()
 
 export const parse = (record: Record) => schema.parse(record)
 export const parseId = (id: unknown) => schema.shape.id.parse(id)
-export const parseName = (name: unknown) => schema.shape.name.parse(name)
+export const parseName = (name: unknown) => {
+  const parsedName = schema.shape.name.parse(name)
+  return parsedName.split(/[_\s]/).join(' ').toLowerCase()
+}
 export const parseInsertable = (record: unknown) => insertable.parse(record)
 export const parseUpdatable = (record: unknown) => updateable.parse(record)
 

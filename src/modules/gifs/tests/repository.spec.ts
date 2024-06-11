@@ -17,7 +17,6 @@ afterEach(async () => {
 describe('Create', () => {
   it('should create a gif record', async () => {
     const record = await repository.createNew(fakeGif())
-    console.log(record)
     expect(record).toEqual(gifMatcher())
     const allRecords = await selectAllRecords()
     expect(allRecords).toHaveLength(1)

@@ -5,7 +5,6 @@ import { omit } from 'lodash/fp'
 import createApp from '@/app'
 import {
   fakeMessage,
-  messageMatcher,
   fakeMessagePostBody,
   postResponseBodyMatcher,
   buildMockDiscord,
@@ -178,7 +177,55 @@ describe('GET ?username=', () => {
       }),
     ])
     const { body } = await supertest(app)
-      .get(`/messages?username=${user1.name}`)
+      .get(`/messages?username=${'tester'}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      postResponseBodyMatcher({
+        sprintsCode: sprint1.sprintsCode,
+        title: sprint1.title,
+        text: template1.text,
+        name: user1.name,
+        url: gif1.url,
+      }),
+    ])
+  })
+})
+
+describe('GET ?sprint=', () => {
+  it('should return a list of existing messages for speciefied user', async () => {
+    const [user1, user2] = await createForUsers([
+      fakeUser({ name: 'tester' }),
+      fakeUser({ name: 'johny' }),
+    ])
+    const [gif1, gif2] = await createForGifs([
+      fakeGif({ url: 'https://testurl.test1.com/gif' }),
+      fakeGif({ url: 'https://testurl.test2.com/gif' }),
+    ])
+    const [sprint1, sprint2] = await createForSprints([
+      fakeSprint({ sprintsCode: 'WD-1.1' }),
+      fakeSprint({ sprintsCode: 'WD-1.2' }),
+    ])
+    const [template1, template2] = await createForTemplates([
+      fakeTemplate({ text: 'test text 1' }),
+      fakeTemplate({ text: 'test text 2' }),
+    ])
+    createForMessages([
+      fakeMessage({
+        userId: user1.id,
+        sprintId: sprint1.id,
+        templateId: template1.id,
+        gifId: gif1.id,
+      }),
+      fakeMessage({
+        userId: user2.id,
+        sprintId: sprint2.id,
+        templateId: template2.id,
+        gifId: gif2.id,
+      }),
+    ])
+    const { body } = await supertest(app)
+      .get(`/messages?sprint=${sprint1.sprintsCode}`)
       .expect(200)
 
     expect(body).toEqual([

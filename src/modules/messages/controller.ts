@@ -1,9 +1,7 @@
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import type { Database } from '@/database'
-import { jsonRoute } from '@/utils/middleware'
-import { MessageNotFound } from './errors'
-import * as schema from './schema'
+import { jsonRoute, unsupportedRoute } from '@/utils/middleware'
 import buildServices from './services'
 import { Discord } from '../discord'
 import { Giphy } from '../giphyApi'
@@ -26,13 +24,20 @@ export default (db: Database, discord: Discord, giphy: Giphy) => {
     .get(
       '/',
       jsonRoute(async (req) => {
-        console.log(req.query)
-        const name = parseName(req.query.name)
-        if (name) return services.getAllMessagesByUserName(name)
-        const sprintsCode = parseSprintsCode(req.query.sprint)
-        if (sprintsCode) return services.getAllMessagesBySprintCode(sprintsCode)
+        if (req.query.username)
+          return services.getAllMessagesByUserName(
+            parseName(req.query.username)
+          )
+        if (req.query.sprint)
+          return services.getAllMessagesBySprintCode(
+            parseSprintsCode(req.query.sprint)
+          )
         return services.getAllMessages()
       })
     )
+    .delete('/', unsupportedRoute)
+    .patch('/', unsupportedRoute)
+    .put('/', unsupportedRoute)
+
   return router
 }

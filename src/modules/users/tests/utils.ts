@@ -5,7 +5,7 @@ import type { Users } from '@/database'
 export const fakeUser = (
   overrides: Partial<Insertable<Users>> = {}
 ): Insertable<Users> => ({
-  name: 'John Tester',
+  name: 'john',
   ...overrides,
 })
 

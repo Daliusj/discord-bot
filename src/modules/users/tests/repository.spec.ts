@@ -28,27 +28,27 @@ describe('Create', () => {
 
 describe('Find', () => {
   it('should return a user by specified name', async () => {
-    await createForUsers(fakeUser({ name: 'John Tester' }))
-    const expression = searchExpression.findByName('John Tester')
+    await createForUsers(fakeUser({ name: 'john' }))
+    const expression = searchExpression.findByName('john')
     const record = await repository.find(expression)
-    expect(record).toEqual([userMatcher({ name: 'John Tester' })])
+    expect(record).toEqual([userMatcher({ name: 'john' })])
   })
 
   it('should return an empty array if no users are found', async () => {
-    await createForUsers(fakeUser({ name: 'John Tester' }))
+    await createForUsers(fakeUser({ name: 'john' }))
     const expression = searchExpression.findByName('peter')
     const record = await repository.find(expression)
     expect(record).toEqual([])
   })
 
   it('should return all matching records for partial matches', async () => {
-    await createForUsers(fakeUser({ name: 'John Tester' }))
-    await createForUsers(fakeUser({ name: 'Johnson' }))
+    await createForUsers(fakeUser({ name: 'john' }))
+    await createForUsers(fakeUser({ name: 'johnson' }))
     const expression = searchExpression.findByPartialName('john')
     const records = await repository.find(expression)
     expect(records).toEqual([
-      userMatcher({ name: 'John Tester' }),
-      userMatcher({ name: 'Johnson' }),
+      userMatcher({ name: 'john' }),
+      userMatcher({ name: 'johnson' }),
     ])
   })
 })
@@ -57,22 +57,22 @@ describe('findAll', () => {
   it('sould return all users', async () => {
     createForUsers([
       fakeUser({
-        name: 'Tester1',
+        name: 'tester1',
       }),
       fakeUser({
-        name: 'Tester2',
+        name: 'tester2',
       }),
     ])
     const allRecords = await repository.findAll()
     expect(allRecords).toHaveLength(2)
     expect(allRecords[0]).toEqual(
       userMatcher({
-        name: 'Tester1',
+        name: 'tester1',
       })
     )
     expect(allRecords[1]).toEqual(
       userMatcher({
-        name: 'Tester2',
+        name: 'tester2',
       })
     )
   })

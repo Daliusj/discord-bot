@@ -56,7 +56,7 @@ export default (db: Database, discord: Discord, giphy: Giphy) => {
     }> => {
       const gifRecord = await gifs.createNew({ url })
       if (!gifRecord) {
-        throw new Error('Failed to create Gif record')
+        throw new Error('Failed to create gif record')
       }
       const messagesRecord = await messages.createNew({
         gifId: gifRecord?.id!,
@@ -102,7 +102,6 @@ export default (db: Database, discord: Discord, giphy: Giphy) => {
       const sprint = await getSprint()
       const template = await getRandomTemplate()
       const record = await createDbRecord(sprint.id, template.id, user.id, url)
-      console.log(record)
       await sendDiscordMessage(template.text, user.name, sprint.title, url)
 
       return {
@@ -114,7 +113,6 @@ export default (db: Database, discord: Discord, giphy: Giphy) => {
         timeStamp: record.timeStamp,
       }
     } catch (err) {
-      console.log(err)
       throw new Error(
         `Error creating message: ${err instanceof Error ? err.message : 'Unknown error'}`
       )
