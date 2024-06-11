@@ -19,12 +19,11 @@ export default async (phrase: string): Promise<Giphy> => {
         const { data: gif } = await gf.search(phrase, {
           sort: 'relevant',
           lang: 'es',
-          limit: 25,
-          // offset: Math.floor(Math.random() * 1000),
+          limit: 1,
+          offset: Math.floor(Math.random() * 100),
           type: 'gifs',
         })
-        const randomIndex = Math.floor(Math.random() * gif.length)
-        return gif[randomIndex].embed_url
+        return gif[0].embed_url
       },
     }
   } catch (err) {
