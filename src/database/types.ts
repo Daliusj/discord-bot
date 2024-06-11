@@ -7,6 +7,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 export interface Gifs {
   id: Generated<number>;
   url: string;
+  urlUnused: string;
 }
 
 export interface Messages {
