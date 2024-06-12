@@ -7,8 +7,8 @@ import {
   fakeMessage,
   fakeMessagePostBody,
   postResponseBodyMatcher,
-  buildMockDiscord,
-  buildMockGiphy,
+  buildMockDiscordSuccess,
+  buildMockGiphySuccess,
 } from './utils'
 import { fakeSprint } from '@/modules/sprints/tests/utils'
 import { fakeTemplate } from '@/modules/templates/tests/utils'
@@ -16,8 +16,8 @@ import { fakeGif } from '@/modules/gifs/tests/utils'
 import { fakeUser } from '@/modules/users/tests/utils'
 
 const db = await createTestDatabase()
-const giphy = await buildMockGiphy()
-const discord = await buildMockDiscord()
+const giphy = await buildMockGiphySuccess()
+const discord = await buildMockDiscordSuccess()
 const app = createApp(db, discord, giphy)
 
 const createForMessages = createFor(db, 'messages')

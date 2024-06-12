@@ -6,16 +6,22 @@ import { fakeUser } from '@/modules/users/tests/utils'
 import buildServices from '../services'
 import {
   fakeMessage,
-  buildMockGiphy,
-  buildMockDiscord,
+  buildMockDiscordSuccess,
   postResponseBodyMatcher,
+  buildMockGiphySuccess,
+  buildMockGiphyFailure,
+  buildMockDiscordFeilure,
 } from './utils'
 import { fakeGif } from '@/modules/gifs/tests/utils'
 
 const db = await createTestDatabase()
-const discord = await buildMockDiscord()
-const giphy = await buildMockGiphy()
-const services = buildServices(db, discord, giphy)
+const discordSuccess = await buildMockDiscordSuccess()
+const giphySuccess = await buildMockGiphySuccess()
+const services = buildServices(db, discordSuccess, giphySuccess)
+const giphyFailure = await buildMockGiphyFailure()
+const servicesGiphyFeilure = buildServices(db, discordSuccess, giphyFailure)
+const discordFailure = await buildMockDiscordFeilure()
+const servicesDiscordFeilure = buildServices(db, discordFailure, giphySuccess)
 const createForUsers = createFor(db, 'users')
 const createForSprints = createFor(db, 'sprints')
 const createForTemplates = createFor(db, 'templates')
@@ -48,7 +54,7 @@ describe('createMessage', () => {
         sprintsCode: sprint.sprintsCode,
         title: sprint.title,
         text: template.text,
-        url: await giphy.getGifUrl(),
+        url: await giphySuccess.getGifUrl(),
       })
     )
   })
@@ -60,6 +66,26 @@ describe('createMessage', () => {
     await expect(
       services.createMessage(user.name, 'Wrong-code')
     ).rejects.toThrow(/sprint/i)
+  })
+  it('should throw an error if Giphy is not working', async () => {
+    const [user] = await createForUsers(fakeUser({ name: 'Tester' }))
+    const [sprint] = await createForSprints(
+      fakeSprint({ sprintsCode: 'WD-1.1' })
+    )
+    await createForTemplates(fakeTemplate({ text: 'Test text' }))
+    await expect(
+      servicesGiphyFeilure.createMessage(user.name, sprint.sprintsCode)
+    ).rejects.toThrow(/giphy/i)
+  })
+  it('should throw an error if Discord is not working', async () => {
+    const [user] = await createForUsers(fakeUser({ name: 'Tester' }))
+    const [sprint] = await createForSprints(
+      fakeSprint({ sprintsCode: 'WD-1.1' })
+    )
+    await createForTemplates(fakeTemplate({ text: 'Test text' }))
+    await expect(
+      servicesDiscordFeilure.createMessage(user.name, sprint.sprintsCode)
+    ).rejects.toThrow(/discord/i)
   })
 })
 

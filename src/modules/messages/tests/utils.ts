@@ -1,4 +1,4 @@
-import { expect } from 'vitest'
+import { expect, vi } from 'vitest'
 import type { Insertable } from 'kysely'
 import type { Messages } from '@/database'
 import type { Giphy } from '@/modules/giphyApi'
@@ -51,10 +51,20 @@ export const postResponseBodyMatcher = (
   ...overrides,
 })
 
-export const buildMockGiphy = async (): Promise<Giphy> => ({
-  getGifUrl: async () => 'https://test.giphy.com/media/asdf123/giphy.gif',
+export const buildMockGiphySuccess = async (): Promise<Giphy> => ({
+  getGifUrl: vi
+    .fn()
+    .mockResolvedValue('https://test.giphy.com/media/asdf123/giphy.gif'),
 })
 
-export const buildMockDiscord = async (): Promise<Discord> => ({
-  sendMessage: async () => {},
+export const buildMockGiphyFailure = async (): Promise<Giphy> => ({
+  getGifUrl: vi.fn().mockRejectedValue(new Error('Giphy error')),
+})
+
+export const buildMockDiscordSuccess = async (): Promise<Discord> => ({
+  sendMessage: vi.fn().mockResolvedValue(true),
+})
+
+export const buildMockDiscordFeilure = async (): Promise<Discord> => ({
+  sendMessage: vi.fn().mockRejectedValue(new Error('Discord Error')),
 })

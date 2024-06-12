@@ -1,11 +1,11 @@
-import { Client, GatewayIntentBits } from 'discord.js'
+import { Client, GatewayIntentBits, Message } from 'discord.js'
 
 type SendMessage = (
   template: string,
   userName: string,
   title: string,
   gifUrl: string
-) => Promise<void>
+) => Promise<Message<true> | Message<false>>
 
 export type Discord = {
   sendMessage: SendMessage
@@ -44,13 +44,13 @@ export default async (): Promise<Discord> => {
     try {
       const channel = await client.channels.fetch(CHANNEL_ID)
       if (channel?.isTextBased()) {
-        await channel.send({
+        const message = await channel.send({
           content: getMessage(),
         })
-        console.log('Message sent successfully!')
-      } else {
-        throw new Error('The specified discord channel is not a text channel.')
+        console.log('Messege sent')
+        return message
       }
+      throw new Error('The specified discord channel is not a text channel.')
     } catch (err) {
       throw new Error(
         `Failed to send message:, ${err instanceof Error ? err.message : 'An unknow error occured'}`

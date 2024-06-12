@@ -5,13 +5,13 @@ import { omit } from 'lodash/fp'
 import createApp from '@/app'
 import { fakeTemplate, templateMatcher } from './utils'
 import {
-  buildMockGiphy,
-  buildMockDiscord,
+  buildMockGiphySuccess,
+  buildMockDiscordSuccess,
 } from '@/modules/messages/tests/utils'
 
 const db = await createTestDatabase()
-const giphy = await buildMockGiphy()
-const discord = await buildMockDiscord()
+const giphy = await buildMockGiphySuccess()
+const discord = await buildMockDiscordSuccess()
 const app = createApp(db, discord, giphy)
 
 const createForTemplates = createFor(db, 'templates')
