@@ -50,9 +50,17 @@ The application has several Express routes for managing messages, templates, and
 - GET /templates - fetches all templates;
 - GET /templates/:id - fetches template with specified id;
 - POST /templates - creates new template.
-  Request Body: `{"text":"your message template"}`
+  Request Body:
+
+  ```sh
+  `{"text":"your message template"}`
+  ```
+
 - PATCH /templates/:id patches the template with the specified ID.
-  Request Body: `{"text":"your message template"}`
+  Request Body:
+  ```sh
+  `{"text":"your message template"}`
+  ```
 - DELETE /templates/:id deletes the template with the specified ID.
 
 #### Managing Sprints
@@ -60,17 +68,26 @@ The application has several Express routes for managing messages, templates, and
 - GET /sprints - fetches all sprints;
 - GET /sprints/:id - fetches sprints with specified id;
 - POST /sprints - creates a new sprint.
-  Request Body: `{"sprintsCode":"sprintCode1", "title":"Sprint title"}`
+  Request Body:
+  ```sh
+  `{"sprintsCode":"sprintCode1", "title":"Sprint title"}`
+  ```
 - PATCH /sprints/:id patches the sprint with the specified ID.
-  Request Body: `{"sprintsCode":"sprintCode1", "title":"Sprint title"}`
+  Request Body:
+  ```sh
+  `{"sprintsCode":"sprintCode1", "title":"Sprint title"}`
+  ```
 - DELETE /sprints/:id deletes the sprint with the specified ID.
 
 #### Managing Messages
 
 - POST /messages - fetches random gif from Giphy, creates a message and sends to Discord channel.;
-  Request Body: `{"name":"user123", sprintsCode:"sprintCode1"}`
+  Request Body:
+  ```sh
+  `{"name":"user123", sprintsCode:"sprintCode1"}`
+  ```
 - GET /messages - fetches all sent messages.
 - GET /messages?username=user_name - fetches all sent messages with the specified user name.
 - GET /messages?sprint=sprintCode1 - fetches all sent messages with the specified sprint.
 
-# 3.2.4 task repository: https://github.com/Daliusj/ticket-booking.git
+  3.2.4 task repository: https://github.com/Daliusj/ticket-booking.git
