@@ -21,8 +21,19 @@ export const parse = (record: Record) => schema.parse(record)
 export const parseId = (id: unknown) => schema.shape.id.parse(id)
 export const parseSprintsCode = (sprintsCode: unknown) =>
   schema.shape.sprintsCode.parse(sprintsCode).toUpperCase()
-export const parseInsertable = (record: unknown) => insertable.parse(record)
-export const parseUpdatable = (record: unknown) => updateable.parse(record)
+export const parseInsertable = (record: unknown) => {
+  const parsedRecord = insertable.parse(record)
+  return {
+    sprintsCode: parsedRecord.sprintsCode.toUpperCase(),
+    title: parsedRecord.title,
+  }
+}
+export const parseUpdatable = (record: unknown) => {
+  const parsedRecord = updateable.parse(record)
+  if (parsedRecord.sprintsCode)
+    parsedRecord.sprintsCode = parsedRecord.sprintsCode.toUpperCase()
+  return parsedRecord
+}
 
 export const keys: (keyof Record)[] = Object.keys(
   schema.shape
