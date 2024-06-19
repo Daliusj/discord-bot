@@ -54,7 +54,7 @@ describe('Find', () => {
 })
 
 describe('findAll', () => {
-  it('sould return all sprints', async () => {
+  it('should return all sprints', async () => {
     createForSprints([
       fakeSprint({
         sprintsCode: 'WD-1.1',
